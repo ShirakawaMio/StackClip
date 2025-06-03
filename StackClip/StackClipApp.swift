@@ -16,11 +16,16 @@ struct ClipboardStackApp: App {
             if clipboardManager.clipboardStack.isEmpty {
                 Text("剪贴板为空")
             } else {
-                ForEach(clipboardManager.clipboardStack, id: \.self) { item in
+                ForEach(Array(clipboardManager.clipboardStack.enumerated()), id: \.element) { index, itemArray in
                     Button(action: {
-                        clipboardManager.copyToClipboard(item)
+                        clipboardManager.copyToClipboard(itemArray)
                     }) {
-                        Text(item).lineLimit(1)
+                        if let firstItem = itemArray.first,
+                           let str = firstItem.displayString {
+                            Text(str).lineLimit(1)
+                        } else {
+                            Text("[多类型项]")
+                        }
                     }
                 }
 
@@ -35,9 +40,10 @@ struct ClipboardStackApp: App {
 }
 
 extension ClipboardManager {
-    func copyToClipboard(_ content: String) {
+    func copyToClipboard(_ content: [PasteboardItemData]) {
         pasteboard.clearContents()
-        pasteboard.setString(content, forType: .string)
+        let copiedItems = content.map { $0.toPasteboardItem() }
+        pasteboard.writeObjects(copiedItems)
     }
 
     func clearStack() {
