@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		35F50D2C2DEF2E8D001B374D /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 35F50D2B2DEF2E8D001B374D /* HotKey */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		35F50D0C2DEF2B3D001B374D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35F50D2C2DEF2E8D001B374D /* HotKey in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +117,7 @@
 			);
 			name = StackClip;
 			packageProductDependencies = (
+				35F50D2B2DEF2E8D001B374D /* HotKey */,
 			);
 			productName = StackClip;
 			productReference = 35F50CFD2DEF2B3C001B374D /* StackClip.app */;
@@ -195,6 +201,9 @@
 			);
 			mainGroup = 35F50CF42DEF2B3C001B374D;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				35F50D2A2DEF2E8D001B374D /* XCRemoteSwiftPackageReference "HotKey" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 35F50CFE2DEF2B3C001B374D /* Products */;
 			projectDirPath = "";
@@ -551,6 +560,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		35F50D2A2DEF2E8D001B374D /* XCRemoteSwiftPackageReference "HotKey" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/soffes/HotKey.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		35F50D2B2DEF2E8D001B374D /* HotKey */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 35F50D2A2DEF2E8D001B374D /* XCRemoteSwiftPackageReference "HotKey" */;
+			productName = HotKey;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 35F50CF52DEF2B3C001B374D /* Project object */;
 }
