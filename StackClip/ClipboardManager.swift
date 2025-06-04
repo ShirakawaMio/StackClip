@@ -59,8 +59,8 @@ class ClipboardManager: ObservableObject {
     var pasteboard = NSPasteboard.general
     private var changeCount: Int
     @Published var clipboardStack: [[PasteboardItemData]] = []
+    @Published var basePasteDelay: TimeInterval = 0.25
     
-    private var previewHotKey: HotKey?
     private var popHotKey: HotKey?
     private var ignoreNextChange = false
 
@@ -98,15 +98,6 @@ class ClipboardManager: ObservableObject {
     }
 
     private func registerHotKeys() {
-        // 不弹栈粘贴
-        previewHotKey = HotKey(key: .v, modifiers: [.option, .shift])
-        previewHotKey?.keyDownHandler = {
-            self.pasteTopElement(pop: false)
-        }
-        if let previewKey = previewHotKey {
-            print("Registered previewHotKey: key = v, modifiers = [option, shift]")
-        }
-
         // 弹栈粘贴
         popHotKey = HotKey(key: .v, modifiers: [.command, .shift])
         popHotKey?.keyDownHandler = {
@@ -130,7 +121,7 @@ class ClipboardManager: ObservableObject {
         pasteboard.writeObjects(newItems)
 
         // 动态计算延迟时间
-        var delay: TimeInterval = 0.5
+        var delay: TimeInterval = basePasteDelay
         var reason = "默认延迟"
 
         // 统计所有类型
@@ -146,18 +137,18 @@ class ClipboardManager: ObservableObject {
         let onlyPlainText = (typeCount == 1 && allTypes.contains(.string))
 
         if onlyPlainText {
-            delay = 0.05
-            reason = "仅含纯文本内容"
+            delay = basePasteDelay * 0.5
+            reason = "仅含纯文本内容，延迟为 basePasteDelay * 0.5"
         } else if hasRTForHTMLOrImage && typeCount <= 2 {
-            delay = 0.25
-            reason = "包含 RTF/HTML 或图片，类型数不超过2"
+            delay = basePasteDelay * 1
+            reason = "包含 RTF/HTML 或图片，类型数不超过2，延迟为 basePasteDelay * 1"
         } else if typeCount > 2 {
-            delay = 0.5
-            reason = "含超过两种类型的数据"
+            delay = basePasteDelay * 2
+            reason = "含超过两种类型的数据，延迟为 basePasteDelay * 2"
         } else {
             // 其他情况保持默认
-            delay = 0.5
-            reason = "其他情况，使用默认延迟"
+            delay = basePasteDelay * 2
+            reason = "其他情况，延迟为 basePasteDelay * 2"
         }
 
         print("simulatePaste 延迟时间设置为 \(delay) 秒，原因：\(reason)")

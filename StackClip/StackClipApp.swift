@@ -35,6 +35,16 @@ struct ClipboardStackApp: App {
                     clipboardManager.clearStack()
                 }
             }
+            Divider()
+            SettingsLink {
+                Text("设置...")
+            }
+            Button("退出 StackClip") {
+                NSApplication.shared.terminate(nil)
+            }
+        }
+        Settings {
+            ContentView().environmentObject(clipboardManager)
         }
     }
 }
