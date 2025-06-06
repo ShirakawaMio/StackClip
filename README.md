@@ -17,6 +17,10 @@
 - 🧠 **智能延迟**：根据内容复杂度动态调整粘贴延迟；
 - 🖥️ **控制栏图标**：点击图标快速查看当前剪贴板栈内容；
 - 🔐 **隐私优先**：本地运行、无网络依赖。
+- 🧩 **每个栈位支持快捷键访问(todo)**：可使用数字键快速粘贴特定栈元素；
+- 🧾 **剪贴内容类型提示(todo)**：区分文本、图片、富文本等类型；
+- 🚫 **剪贴板内容过滤规则(todo)**：可选过滤密码、验证码等敏感内容；
+- 🖱️ **菜单栏支持拖拽重排序(todo)**：可手动调整剪贴项顺序；
 
 ---
 
@@ -33,36 +37,40 @@
 
 ---
 
-## 🔧 安装与运行
+### 安装方式
 
-### 从源代码构建（需要 macOS + Xcode）
+#### 方式一：下载安装包
+
+在 [Releases](https://github.com/ShirakawaMio/StackClip/releases) 中下载最新的安装包。
+下载后打开安装包，将 StackClip.app 拖入应用程序文件夹即可。
+
+#### 方式二：从源代码构建
 
 ```bash
 git clone https://github.com/ShirakawaMio/StackClip.git
 cd StackClip
 open StackClip.xcodeproj
 ```
-
 点击 Xcode 中的 ▶️ 运行即可启动 App。
-
-首次运行请在「系统设置 > 隐私与安全 > 辅助功能」中授权，以支持自动粘贴功能。
 
 ---
 
 ## 🛠️ 配置项
 
-- ⌨️ 自定义弹栈快捷键（todo）
+- ⌨️ 自定义弹栈快捷键
 - 🕒 设置粘贴延迟
 - 🔒 权限提醒与辅助功能检测
+- 🖥️ 程序坞图标显示/隐藏
+- 📜 菜单显示字数限制
 
 ---
 
 ## 💡 TODO
 
-- [ ] 剪贴板内容预览增强（图文混排渲染）
-- [ ] iCloud 同步栈内容
-- [ ] 高级过滤规则（按类型保留/忽略）
-- [ ] 支持自定义弹栈快捷键
+- [ ] 剪贴板内容过滤规则
+- [ ] 剪贴内容类型提示
+- [ ] 栈位自动分配快捷键
+- [ ] 菜单栏支持鼠标拖拽重排序
 
 ---
 
@@ -70,7 +78,7 @@ open StackClip.xcodeproj
 
 本项目使用了以下开源库：
 
-- [HotKey](https://github.com/soffes/HotKey)
+- [KeyboardShortcuts](https://github.com/sindresorhus/KeyboardShortcuts)
 - [SwiftUI](https://developer.apple.com/xcode/swiftui/)
 
 ---
