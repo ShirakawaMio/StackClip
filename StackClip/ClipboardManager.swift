@@ -81,7 +81,9 @@ class ClipboardManager: ObservableObject {
         if ignoreNextChange {
             ignoreNextChange = false
             changeCount = pasteboard.changeCount // 依然要同步 changeCount
+            #if DEBUG
             print("忽略了一次由自身写入触发的剪贴板变化")
+            #endif
             return
         }
         if pasteboard.changeCount != changeCount {
@@ -89,8 +91,10 @@ class ClipboardManager: ObservableObject {
                 let snapshot = newItems.map { PasteboardItemData(item: $0) }
                 if clipboardStack.first != snapshot {
                     clipboardStack.insert(snapshot, at: 0)
+                    #if DEBUG
                     print("Clipboard changed: new content added -> \(snapshot)")
                     print("Current clipboard stack: \(clipboardStack)")
+                    #endif
                 }
             }
             changeCount = pasteboard.changeCount
@@ -112,7 +116,9 @@ class ClipboardManager: ObservableObject {
         guard !clipboardStack.isEmpty else { return }
 
         let elementToPasteData = clipboardStack.first!
+        #if DEBUG
         print("pasteTopElement called with pop = \(pop). Pasting content: \(elementToPasteData)")
+        #endif
         ignoreNextChange = true // 下次检测时跳过
 
         let newItems = elementToPasteData.map { $0.toPasteboardItem() }
@@ -151,7 +157,9 @@ class ClipboardManager: ObservableObject {
             reason = "其他情况，延迟为 basePasteDelay * 2"
         }
 
-        print("simulatePaste 延迟时间设置为 \(delay) 秒，原因：\(reason)")
+        #if DEBUG
+        print("simulatePaste 延迟时间设置为 \(delay) 秒")
+        #endif
 
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
             self.simulatePaste()
@@ -159,7 +167,9 @@ class ClipboardManager: ObservableObject {
 
         if pop {
             clipboardStack.removeFirst()
+            #if DEBUG
             print("Element popped from clipboard stack. Current stack: \(clipboardStack)")
+            #endif
         }
     }
 
@@ -174,14 +184,10 @@ class ClipboardManager: ObservableObject {
 
         keyDown?.post(tap: .cghidEventTap)
         keyUp?.post(tap: .cghidEventTap)
+        #if DEBUG
         print("模拟粘贴事件已触发")
+        #endif
     }
     
-    private func checkAccessibilityPermission() {
-        if !AXIsProcessTrusted() {
-            print("【警告】未获得辅助功能权限。请在“系统设置 > 隐私与安全 > 辅助功能”中，勾选 StackClip。否则无法自动粘贴。")
-        } else {
-            print("辅助功能权限已获得。")
-        }
-    }
+
 }
