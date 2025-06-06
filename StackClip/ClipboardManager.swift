@@ -63,7 +63,6 @@ class ClipboardManager: ObservableObject {
     var pasteboard = NSPasteboard.general
     private var changeCount: Int
     @Published var clipboardStack: [[PasteboardItemData]] = []
-    @Published var basePasteDelay: TimeInterval = 0.25
     
     private var ignoreNextChange = false
 
@@ -94,6 +93,9 @@ class ClipboardManager: ObservableObject {
                 let snapshot = newItems.map { PasteboardItemData(item: $0) }
                 if clipboardStack.first != snapshot {
                     clipboardStack.insert(snapshot, at: 0)
+                    if clipboardStack.count > AppConfig.shared.maxStackDepth {
+                        clipboardStack.removeLast()
+                    }
                     #if DEBUG
                     print("Clipboard changed: new content added -> \(snapshot)")
                     print("Current clipboard stack: \(clipboardStack)")
@@ -125,8 +127,7 @@ class ClipboardManager: ObservableObject {
         pasteboard.writeObjects(newItems)
 
         // 动态计算延迟时间
-        var delay: TimeInterval = basePasteDelay
-        var reason = "默认延迟"
+        var delay: TimeInterval = AppConfig.shared.basePasteDelay
 
         // 统计所有类型
         var allTypes = Set<NSPasteboard.PasteboardType>()
@@ -141,18 +142,14 @@ class ClipboardManager: ObservableObject {
         let onlyPlainText = (typeCount == 1 && allTypes.contains(.string))
 
         if onlyPlainText {
-            delay = basePasteDelay * 0.5
-            reason = "仅含纯文本内容，延迟为 basePasteDelay * 0.5"
+            delay = AppConfig.shared.basePasteDelay * 0.5
         } else if hasRTForHTMLOrImage && typeCount <= 2 {
-            delay = basePasteDelay * 1
-            reason = "包含 RTF/HTML 或图片，类型数不超过2，延迟为 basePasteDelay * 1"
+            delay = AppConfig.shared.basePasteDelay * 1
         } else if typeCount > 2 {
-            delay = basePasteDelay * 2
-            reason = "含超过两种类型的数据，延迟为 basePasteDelay * 2"
+            delay = AppConfig.shared.basePasteDelay * 2
         } else {
             // 其他情况保持默认
-            delay = basePasteDelay * 2
-            reason = "其他情况，延迟为 basePasteDelay * 2"
+            delay = AppConfig.shared.basePasteDelay * 2
         }
 
         #if DEBUG
