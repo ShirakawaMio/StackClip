@@ -6,8 +6,12 @@
 //
 
 import AppKit
-import HotKey
 import ApplicationServices
+import KeyboardShortcuts
+
+extension KeyboardShortcuts.Name {
+    static let popFromStack = Self("popFromStack", default: .init(.v, modifiers: [.command, .option]))
+}
 
 struct PasteboardItemData: Equatable, Hashable {
     let dataDict: [NSPasteboard.PasteboardType: Data]
@@ -61,7 +65,6 @@ class ClipboardManager: ObservableObject {
     @Published var clipboardStack: [[PasteboardItemData]] = []
     @Published var basePasteDelay: TimeInterval = 0.25
     
-    private var popHotKey: HotKey?
     private var ignoreNextChange = false
 
     init() {
@@ -102,13 +105,8 @@ class ClipboardManager: ObservableObject {
     }
 
     private func registerHotKeys() {
-        // 弹栈粘贴
-        popHotKey = HotKey(key: .v, modifiers: [.command, .shift])
-        popHotKey?.keyDownHandler = {
+        KeyboardShortcuts.onKeyUp(for: .popFromStack) {
             self.pasteTopElement(pop: true)
-        }
-        if let popKey = popHotKey {
-            print("Registered popHotKey: key = v, modifiers = [command, shift]")
         }
     }
 
