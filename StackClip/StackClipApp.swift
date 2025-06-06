@@ -7,10 +7,19 @@
 
 import SwiftUI
 
+class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        if !AppConfig.shared.showDockIcon {
+            NSApp.setActivationPolicy(.accessory)
+        }
+    }
+}
+
 @main
 struct ClipboardStackApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var clipboardManager = ClipboardManager()
-
+    
     var body: some Scene {
         MenuBarExtra("Clipboard", systemImage: "doc.on.clipboard") {
             if clipboardManager.clipboardStack.isEmpty {
@@ -22,7 +31,7 @@ struct ClipboardStackApp: App {
                     }) {
                         if let firstItem = itemArray.first,
                            let str = firstItem.displayString {
-                            Text(str).lineLimit(1)
+                            Text(String(str.prefix(AppConfig.shared.maxTextLength))).lineLimit(1)
                         } else {
                             Text("[多类型项]")
                         }
@@ -44,7 +53,9 @@ struct ClipboardStackApp: App {
             }
         }
         Settings {
-            ContentView().environmentObject(clipboardManager)
+            ContentView()
+                .environmentObject(clipboardManager)
+                .environmentObject(AppConfig.shared)
         }
     }
 }

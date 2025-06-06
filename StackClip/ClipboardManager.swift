@@ -70,7 +70,6 @@ class ClipboardManager: ObservableObject {
         self.changeCount = pasteboard.changeCount
         startMonitoringClipboard()
         registerHotKeys()
-        checkAccessibilityPermission()
     }
 
     private func startMonitoringClipboard() {
